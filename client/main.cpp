@@ -250,7 +250,9 @@ int main(int argc, char **argv)
     string compiler_name = argv[0];
     dcc_client_catch_signals();
 
-    if ( find_basename( compiler_name ) == rs_program_name) {
+    std::string compiler_basename = find_basename( compiler_name );
+
+    if ( compiler_basename == rs_program_name) {
         if ( argc > 1 ) {
             string arg = argv[1];
             if ( arg == "--help" ) {
@@ -354,7 +356,7 @@ int main(int argc, char **argv)
     if ( !local ) {
         if ( getenv( "ICECC_VERSION" ) ) { // if set, use it, otherwise take default
             try {
-                envs = parse_icecc_version( job.targetPlatform() );
+                envs = parse_icecc_version(job.targetPlatform(), find_prefix(compiler_basename));
             } catch ( int x ) {
                 // we just build locally
             }
