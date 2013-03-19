@@ -1,5 +1,5 @@
-/* -*- c-file-style: "java"; indent-tabs-mode: nil -*-
- *
+/* -*- c-file-style: "java"; indent-tabs-mode: nil; fill-column: 78 -*-
+ * 
  * distcc -- A simple distributed compiler system
  *
  * Copyright (C) 2002, 2003 by Martin Pool <mbp@samba.org>
@@ -19,14 +19,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "exitcode.h"
 
-int dcc_make_tmpnam(const char *prefix,
-                    const char *suffix,
-                    char **name_ret, int relative);
+#include <sys/types.h>
+#include <sys/wait.h>
 
-#ifdef __cplusplus
+/*
+ Converts exit status from waitpid() to exit status to be returned by the process.
+*/
+int shell_exit_status( int status )
+{
+    if( WIFEXITED( status ))
+        return WEXITSTATUS( status );
+    else if( WIFSIGNALED( status ))
+        return WTERMSIG( status ) + 128; // shell does this
+    else
+        return -1;
 }
-#endif

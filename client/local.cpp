@@ -11,12 +11,12 @@
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
 #include "config.h"
@@ -268,7 +268,7 @@ int build_local(CompileJob& job, MsgChannel *local_daemon, struct rusage *used)
         while( wait4( child_pid, &status, 0, used ) < 0 && errno == EINTR)
             ;
 
-        status = WEXITSTATUS(status);
+        status = shell_exit_status(status);
 
         signal( SIGINT, old_sigint );
         signal( SIGTERM, old_sigterm );

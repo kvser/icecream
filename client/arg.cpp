@@ -4,20 +4,19 @@
  *
  * Copyright (C) 2002, 2003 by Martin Pool <mbp@samba.org>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
- * USA
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 
@@ -280,6 +279,11 @@ bool analyse_argv( const char * const *argv,
                     args.append(a, Arg_Local);
                     args.append(argv[i], Arg_Local);
                 }
+            } else if (str_equal("-include-pch", a)) {
+                /* Clang's precompiled header, it's probably not worth it sending the PCH file. */
+                if (argv[i+1])
+                    ++i;
+                always_local = true;
             } else if (str_equal("-D", a)
                        || str_equal("-U", a) ) {
                 args.append(a, Arg_Cpp);
@@ -301,7 +305,6 @@ bool analyse_argv( const char * const *argv,
                        || str_equal("-iquote", a)
                        || str_equal("-imultilib", a)
                        || str_equal("-isysroot", a)
-                       || str_equal("-include", a)
                        || str_equal("-iwithprefixbefore", a)
                        || str_equal("-idirafter", a) ) {
                 args.append(a, Arg_Local);

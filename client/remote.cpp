@@ -11,12 +11,12 @@
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
 #include "config.h"
@@ -417,10 +417,10 @@ static int build_remote_int(CompileJob &job, UseCSMsg *usecs, MsgChannel *local_
         while(waitpid( cpp_pid, &status, 0) < 0 && errno == EINTR)
             ;
 
-        if ( status ) { // failure
+        if ( shell_exit_status(status) != 0 ) { // failure
             delete cserver;
             cserver = 0;
-            return WEXITSTATUS( status );
+            return shell_exit_status( status );
         }
     } else {
         int cpp_fd = open( preproc_file, O_RDONLY );
@@ -687,9 +687,9 @@ int build_remote(CompileJob &job, MsgChannel *local_daemon, const Environments &
         }
         int status = 255;
         waitpid( cpp_pid, &status, 0);
-        if ( status ) { // failure
+        if ( shell_exit_status(status) ) { // failure
             ::unlink( preproc );
-            return WEXITSTATUS( status );
+            return shell_exit_status( status );
         }
 
         char rand_seed[400]; // "designed to be oversized" (Levi's)
@@ -764,7 +764,7 @@ int build_remote(CompileJob &job, MsgChannel *local_daemon, const Environments &
                     misc_error = true;
                     break;
                 }
-                exit_codes[jobmap[pid]] = WEXITSTATUS( status );
+                exit_codes[jobmap[pid]] = shell_exit_status( status );
             }
         }
 

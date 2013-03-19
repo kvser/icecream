@@ -11,12 +11,12 @@
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
 #include "config.h"
@@ -469,7 +469,7 @@ int work_it( CompileJob &j, unsigned int job_stat[], MsgChannel* client,
                     return EXIT_DISTCC_FAILED;
                 }
 
-                if ( !WIFEXITED(status) || WEXITSTATUS(status) ) {
+                if ( shell_exit_status(status) != 0 ) {
                     unsigned long int mem_used = ( ru.ru_minflt + ru.ru_majflt ) * getpagesize() / 1024;
                     rmsg.status = EXIT_OUT_OF_MEMORY;
 
@@ -484,8 +484,8 @@ int work_it( CompileJob &j, unsigned int job_stat[], MsgChannel* client,
                 if ( WIFEXITED(status) ) {
                     struct timeval endtv;
                     gettimeofday(&endtv, 0 );
-                    rmsg.status = WEXITSTATUS(status);
-                    job_stat[JobStatistics::exit_code] = WEXITSTATUS(status);
+                    rmsg.status = shell_exit_status(status);
+                    job_stat[JobStatistics::exit_code] = shell_exit_status(status);
                     job_stat[JobStatistics::real_msec] = (endtv.tv_sec - starttv.tv_sec) * 1000 +
                         (long(endtv.tv_usec) - long(starttv.tv_usec)) / 1000;
                     job_stat[JobStatistics::user_msec] = ru.ru_utime.tv_sec * 1000
